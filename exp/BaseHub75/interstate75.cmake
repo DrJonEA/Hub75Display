@@ -1,0 +1,6 @@
+include_directories(${PIMORONI_PICO_DIR})
+include(${PIMORONI_PICO_DIR}/common/pimoroni_i2c.cmake)
+include(${PIMORONI_PICO_DIR}/common/pimoroni_bus.cmake)
+include(${PIMORONI_PICO_DIR}/libraries/pico_graphics/pico_graphics.cmake)
+include(${PIMORONI_PICO_DIR}/libraries/pico_vector/pico_vector.cmake)
+include(${PIMORONI_PICO_DIR}/libraries/interstate75/interstate75.cmake)
