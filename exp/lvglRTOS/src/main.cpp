@@ -10,6 +10,7 @@ extern "C"{
 #include "Widgets.h"
 #include <FreeRTOS.h>
 #include <task.h>
+#include "WifiHelper.h"
 
 #define TASK_PRIORITY      ( tskIDLE_PRIORITY + 1UL )
 
@@ -36,6 +37,30 @@ void lvgl_task(void* params){
 	}
 }
 
+void wifi_task(void* params){
+
+	WifiHelper::init();
+
+	WifiHelper::sntpAddServer("uk.pool.ntp.org");
+	WifiHelper::sntpAddServer("ntp.my-inbox.co.uk");
+	WifiHelper::sntpAddServer("ntp.virginmedia.com");
+
+	for (;;){
+		//runTimeStats();
+		if (! WifiHelper::isJoined()){
+			if(WifiHelper::join(WIFI_SSID,  WIFI_PASSWORD)){
+				printf("Connected to network %s\n", WIFI_SSID);
+				WifiHelper::sntpStartSync();
+			} else {
+				printf("Failed to Connect to network %s\n", WIFI_SSID);
+			}
+		}
+
+		vTaskDelay(1000);
+	}
+
+}
+
 
 int main() {
 
@@ -50,6 +75,7 @@ int main() {
 
 	xTaskCreate(main_task, "MainThread", 1024*4, NULL, TASK_PRIORITY, &mainTask);
 	xTaskCreate(lvgl_task, "LVGLThread", 1024*2, NULL, TASK_PRIORITY, &lvglTask);
+	xTaskCreate(wifi_task, "WifiThread", 1024, NULL, TASK_PRIORITY, &lvglTask);
 
 	vTaskStartScheduler();
 

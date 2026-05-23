@@ -8,7 +8,7 @@
 #include "Widgets.h"
 #include <cstdio>
 
-
+#include "pico/aon_timer.h"
 
 
 
@@ -68,12 +68,15 @@ void Widgets::init() {
 	lv_obj_set_style_text_align(pTestLbl, LV_TEXT_ALIGN_LEFT, 0);
 	lv_obj_align(pTestLbl, LV_ALIGN_TOP_LEFT, 0, 0);
 	lv_obj_add_style(pTestLbl , &xLabelStA,  LV_PART_MAIN);
-	int32_t l = lv_obj_get_width(pTestLbl) ;
-	xPos = hor + l;
+	xPos = hor ;
 	lv_obj_set_pos(pTestLbl,  xPos,  ver/2-16);
 
 
-
+	pTimeLbl = lv_label_create(xTV);
+	lv_label_set_text(pTimeLbl, "XX:XX:XX");
+	lv_obj_set_style_text_align(pTimeLbl, LV_TEXT_ALIGN_LEFT, 0);
+	lv_obj_align(pTimeLbl, LV_ALIGN_BOTTOM_RIGHT, -10, -5);
+	lv_obj_add_style(pTimeLbl , &xLabelSt,  LV_PART_MAIN);
 
 	pTimer = lv_timer_create(timerCB, 20,  this);
 
@@ -102,7 +105,16 @@ void Widgets::timerHandler(lv_timer_t * timer){
 	int32_t l = lv_obj_get_width(pTestLbl) ;
 	if (xPos < (l * -1)){
 		uint hor = lv_disp_get_hor_res(NULL);
-		xPos = hor + l;//l;
+		xPos = hor;//l;
+	}
+
+	if (aon_timer_is_running ()){
+		struct tm tm;
+		char buf[12];
+		if(aon_timer_get_time_calendar (&tm)){
+			sprintf(buf, "%02d:%02d:%02d", tm.tm_hour, tm.tm_min, tm.tm_sec);
+			lv_label_set_text(pTimeLbl, buf);
+		}
 	}
 }
 

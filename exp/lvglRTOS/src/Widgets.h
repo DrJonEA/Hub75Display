@@ -31,6 +31,7 @@ private:
 
 	lv_obj_t *pDrJonLbl;
 	lv_obj_t *pTestLbl;
+	lv_obj_t *pTimeLbl;
 
 	lv_style_t xStyleTile;
 	lv_style_t xLabelSt;
