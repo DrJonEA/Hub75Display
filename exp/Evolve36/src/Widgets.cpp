@@ -191,6 +191,9 @@ void Widgets::timerHandler(lv_timer_t * timer){
 
 void Widgets::scene(){
 	uint hor = lv_disp_get_hor_res(NULL);
+	uint ver = lv_disp_get_ver_res(NULL);
+	xPos = hor ;
+	lv_obj_set_pos(pTestLbl,  xPos,  ver/2-16);
 	switch (xScene){
 	case 0:
 		lv_label_set_text(pTestLbl, "The Droids You re Looking For");
@@ -212,8 +215,7 @@ void Widgets::scene(){
 		break;
 	}
 
-	//int l = lv_obj_get_width(pTestLbl) ;
-	xPos = hor ;
+
 
 	xScene++;
 	if (xScene > 5){
